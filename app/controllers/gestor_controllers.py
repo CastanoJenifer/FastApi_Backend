@@ -12,18 +12,21 @@ class GestorController:
     async def read_libros():
         try:
             libros = await Gestor.all()
-            return libros
+            if libros is None:
+                return "No hay libros aún"
+            else:
+                return libros
         except DoesNotExist:
             return None
 
     @staticmethod
-    async def update_libro(libro_id: int, libro_data):
+    async def update_libro(id_libro, titulo, descripcion, estado, puntuacion):
         try:
-            libro_obj = await Gestor.get(id=libro_id)
-            libro_obj.titulo = libro_data.titulo
-            libro_obj.descripcion = libro_data.descripcion
-            libro_obj.estado = libro_data.estado
-            libro_obj.puntuacion = libro_data.puntuacion
+            libro_obj = await Gestor.get(id=id_libro)
+            libro_obj.titulo = titulo
+            libro_obj.descripcion = descripcion
+            libro_obj.estado = estado
+            libro_obj.puntuacion = puntuacion
             await libro_obj.save()
             return libro_obj
         except DoesNotExist:
